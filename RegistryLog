@@ -1,0 +1,36 @@
+######################################################################################################
+# Nome: Maicon Silva                                                                                 #
+# Data Criaçao: 02/01/2021                                                                           #
+# Descriçao: Registry Log in Python                                                                  #
+# Projeto:   Databricks AWS                                                                          #
+#                                                                                                    #
+#                                                                                                    #
+#                                                                                                    #
+#                                                                                                    #
+######################################################################################################
+
+import logging
+
+#log_format = '%(asctime)s:%(levelname)s:%(filename)s:%(message)s'
+log_format = '%(asctime)s: %(levelname)s:%(filename)s:%(message)s'
+
+logging.basicConfig(filename='/home/maicfel/Scripts/Arquivos/File.log',
+                    # w -> sobrescreve o arquivo a cada log
+                    # a -> não sobrescreve o arquivo
+                    filemode='w',
+                    level=logging.DEBUG,
+                    format=log_format)
+
+'''
+   O objeto getLogger() permite que retornemos
+   varias instancias de logs.
+'''
+# Instancia do objeto getLogger()
+logger = logging.getLogger('root')
+
+
+# Chamando o arquivo de Log - 3 Metodos Diferentes info, error e debug
+logger.info('9999999999999999999')
+logger.info('2222222222222222222')
+logger.error('dsfasdfasdfasdfadf')
+logger.debug('555555555555555555')
