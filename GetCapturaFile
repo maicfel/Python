@@ -1,0 +1,79 @@
+######################################################################################################
+# Nome: Maicon Silva                                                                                 #
+# Data Criaçao: 02/01/2021                                                                           #
+# Descriçao: Capture file dynamically and Split as per multi reader                                  #
+# Projeto:  Data Enginner - Databricks - AWS                                                         #
+#                                                                                                    #
+#                                                                                                    #
+#                                                                                                    #
+#                                                                                                    #
+######################################################################################################
+
+import os
+
+_getpath_ = '/home/maicfel/Scripts/Arquivos'
+
+list_exec = [['FCADASTRO_ 01,02,03,04 0,2'],
+             ['TFINANCA_ 07,08 9,11']]
+
+for i in range(len(list_exec)):
+
+    file_name = list_exec[i][0].split()[0]
+    print(f'Nome do Prefix: {file_name}')
+
+    list_layout = list_exec[i][0].split()[1].split(',')
+    print(f'Codigos p/ Filtros: {list_layout}')
+
+    posit_reg = list_exec[i][0].split()[2]
+    print(f'Posiçao dentro do Arquivo p/ Filtro: {posit_reg}')
+    print()
+
+    for files in os.listdir(_getpath_):
+        files = files.replace('.TXT', '')
+
+        if file_name in files:
+
+            openfile = open('/home/maicfel/Scripts/Arquivos/' + files + '.TXT')
+            lines = openfile.readlines()
+
+
+            for k in list_layout:
+
+                try:
+                    file2 = open('/home/maicfel/Scripts/Arquivos/HDFS/' + files + '_' + k + '.TXT')
+                    print('File Exists!' + files + '_' + k + '.TXT')
+                    #print()
+
+                except Exception as error:
+
+                    file2 = open('/home/maicfel/Scripts/Arquivos/HDFS/' + files + '_' + k + '.TXT', 'w+')
+                    print('File Create: ' + k)
+                    #print()
+
+                    for x in lines:
+                        #print(posit_reg[0:].split()[0].split(',')[0])
+                        #print(posit_reg[0:].split()[0].split(',')[1])
+
+                        IniPosit = int(posit_reg[0:].split()[0].split(',')[0])
+                        FimPosit = int(posit_reg[0:].split()[0].split(',')[1])
+
+                        #print(files, IniPosit, FimPosit)
+                        if x[IniPosit:FimPosit] == k:
+                            print(files, x[IniPosit:FimPosit])
+                            file2.write(x)
+
+                    openfile.close()
+                    file2.close()
+
+
+for i in os.listdir('/home/maicfel/Scripts/Arquivos/HDFS'):
+    if 'TXT' == i[-3:]:
+        if os.stat("/home/maicfel/Scripts/Arquivos/HDFS/" + i).st_size == 0:
+            os.remove('/home/maicfel/Scripts/Arquivos/HDFS/' + i)
+            print()
+            print(f'Arquivo {i} com tamanho zero - (0), foi deletado.')
+            pass
+        else:
+            pass
+    else:
+        pass
