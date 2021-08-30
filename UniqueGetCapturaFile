@@ -1,0 +1,54 @@
+######################################################################################################
+# Nome: Maicon Silva                                                                                 #
+# Data Criaçao: 02/01/2021                                                                           #
+# Descriçao: Unique Captures file dynamically and Split as per multi reader                          #
+# Projeto: Databricks                                                                                          #
+#                                                                                                    #
+#                                                                                                    #
+#                                                                                                    #
+#                                                                                                    #
+######################################################################################################
+
+import os
+
+### Paramentros ###
+_getpath_ = '/home/maicfel/Scripts/Arquivos'
+_prefix_ = 'FCADASTRO_'
+_filter_ = '01', '02', '03', '04'
+_getposit_ = 0          # Posiçao inicial onde esta o dado dentro do arquivo
+_decimal_ = 2           # Quantidade de casas onde o dados sera filtrado. Ex quantidade de casas 2 e inicio posicçao inicial 0, setado na variavel _getposit_
+
+
+_count_ = 0
+
+for files in os.listdir(_getpath_):
+
+    files = files.replace('.TXT', '')
+
+    if _prefix_ in files:
+        _count_ += 1
+        print(f'{_count_} Get Files: {files}')
+
+        openfile = open('/home/maicfel/Scripts/Arquivos/' + files + '.TXT')
+        lines = openfile.readlines()
+
+        for k in _filter_:
+
+            try:
+                file2 = open('/home/maicfel/Scripts/Arquivos/HDFS/' + files + '_' + k + '.TXT')
+                print('File Exists!' + files + '_' + k + '.TXT')
+                print()
+
+            except Exception as error:
+
+                file2 = open('/home/maicfel/Scripts/Arquivos/HDFS/' + files + '_' + k + '.TXT', 'w+')
+                print('File Create: ' + k)
+
+                for x in lines:
+                    if x[_getposit_:_decimal_] == k:
+                        file2.write(x)
+
+                openfile.close()
+                file2.close()
+
+            pass
